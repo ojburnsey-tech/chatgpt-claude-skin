@@ -1,0 +1,333 @@
+/* ================================================================
+   CLAUDE SKIN FOR CHATGPT — content.css  v1.0.0
+   Targets semantic HTML, data-* attributes, and CSS custom
+   properties for maximum resilience across ChatGPT updates.
+   ================================================================ */
+
+/* ── CLAUDE DESIGN TOKENS ──────────────────────────────────────── */
+:root {
+  --cl-cream:          #F4F3EE;
+  --cl-cream-2:        #ECEAE3;
+  --cl-cream-border:   #E0DDD5;
+  --cl-cream-mid:      #D4D1C8;
+
+  --cl-sidebar:        #1A1918;
+  --cl-sidebar-2:      #242220;
+  --cl-sidebar-3:      #2E2C29;
+  --cl-sidebar-4:      #3A3733;
+  --cl-sidebar-text:   #E5E0D5;
+  --cl-sidebar-dim:    #9B9488;
+
+  --cl-ink:            #1A1A18;
+  --cl-ink-2:          #4A4845;
+  --cl-ink-3:          #6B6760;
+  --cl-ink-4:          #9B9690;
+
+  --cl-coral:          #DA7756;
+  --cl-coral-2:        #C46645;
+  --cl-coral-light:    #F5EBE7;
+
+  /* Remap ChatGPT's own CSS variables to Claude values */
+  --main-surface-primary:      #F4F3EE;
+  --main-surface-secondary:    #ECEAE3;
+  --main-surface-tertiary:     #E0DDD5;
+  --sidebar-surface-primary:   #1A1918;
+  --sidebar-surface-secondary: #242220;
+  --sidebar-surface-tertiary:  #2E2C29;
+  --text-primary:              #1A1A18;
+  --text-secondary:            #6B6760;
+  --text-tertiary:             #9B9690;
+  --border-default:            #E0DDD5;
+  --border-light:              #ECEAE3;
+  --border-sharp:              #D4D1C8;
+  --surface-tertiary:          #ECEAE3;
+  --link:                      #DA7756;
+  --button-primary-bg:         #DA7756;
+  --button-primary-text:       #FFFFFF;
+  --icon-default:              #6B6760;
+  --icon-bright:               #1A1A18;
+}
+
+/* ── GLOBAL ────────────────────────────────────────────────────── */
+* {
+  font-family: "DM Sans", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Helvetica Neue", system-ui, sans-serif !important;
+}
+
+html, body {
+  background-color: #F4F3EE !important;
+  color: #1A1A18 !important;
+  color-scheme: light !important;
+}
+
+html.dark, html[data-theme="dark"], body.dark {
+  background-color: #F4F3EE !important;
+  color: #1A1A18 !important;
+}
+
+/* ── LAYOUT ────────────────────────────────────────────────────── */
+#__next, main, [role="main"],
+[class*="main-content"], [class*="conversation"] {
+  background-color: #F4F3EE !important;
+}
+
+/* ── SIDEBAR / NAV ─────────────────────────────────────────────── */
+nav, aside, [class*="sidebar"], [class*="nav-bar"] {
+  background-color: #1A1918 !important;
+  border-right-color: #2E2C29 !important;
+}
+
+nav *, aside * { color: #E5E0D5 !important; }
+
+nav [class*="text-xs"], nav [class*="opacity-"],
+aside [class*="text-xs"] { color: #9B9488 !important; }
+
+nav button:hover, nav a:hover, nav li:hover,
+aside button:hover { background-color: #2E2C29 !important; }
+
+nav [aria-current], nav [class*="active"],
+aside [aria-selected="true"] {
+  background-color: #3A3733 !important;
+}
+
+[aria-label="New chat"], [data-testid="create-new-chat-button"],
+[class*="new-chat"] {
+  background-color: #DA7756 !important;
+  color: #FFFFFF !important;
+  border-color: transparent !important;
+  border-radius: 8px !important;
+}
+
+[aria-label="New chat"]:hover,
+[data-testid="create-new-chat-button"]:hover {
+  background-color: #C46645 !important;
+}
+
+nav svg, aside svg { color: #9B9488 !important; }
+
+nav::-webkit-scrollbar { width: 3px !important; }
+nav::-webkit-scrollbar-track { background: transparent !important; }
+nav::-webkit-scrollbar-thumb {
+  background: #3A3733 !important; border-radius: 4px !important;
+}
+
+/* ── HEADER ────────────────────────────────────────────────────── */
+header, [class*="header"], [class*="top-bar"] {
+  background-color: #F4F3EE !important;
+  border-bottom-color: #E0DDD5 !important;
+}
+header * { color: #1A1A18 !important; }
+
+[class*="model-switcher"], [class*="model-selector"],
+button[aria-haspopup][class*="text-sm"] {
+  background-color: #ECEAE3 !important;
+  border-color: #E0DDD5 !important;
+  color: #1A1A18 !important;
+  border-radius: 8px !important;
+}
+
+/* ── MESSAGES ──────────────────────────────────────────────────── */
+[data-message-author-role] { background-color: transparent !important; }
+[data-message-author-role] > div,
+[data-message-author-role] [class*="message-content"],
+[data-message-author-role] [class*="markdown"] {
+  color: #1A1A18 !important;
+}
+
+/* User bubble */
+[data-message-author-role="user"] [class*="rounded"],
+[data-message-author-role="user"] [class*="bg-"],
+[data-message-author-role="user"] > div > div {
+  background-color: #ECEAE3 !important;
+  border-color: #E0DDD5 !important;
+  color: #1A1A18 !important;
+  box-shadow: none !important;
+  border-radius: 14px !important;
+}
+
+/* Assistant — flat, no background */
+[data-message-author-role="assistant"] [class*="rounded"],
+[data-message-author-role="assistant"] [class*="bg-"],
+[data-message-author-role="assistant"] > div > div {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #1A1A18 !important;
+}
+
+/* Typography in messages */
+[data-message-author-role] p, [data-message-author-role] li,
+[data-message-author-role] span, [data-message-author-role] h1,
+[data-message-author-role] h2, [data-message-author-role] h3,
+[data-message-author-role] td, [data-message-author-role] th {
+  color: #1A1A18 !important;
+}
+
+[data-message-author-role] a {
+  color: #DA7756 !important;
+  text-decoration-color: #DA7756 !important;
+}
+
+/* ── CODE BLOCKS ───────────────────────────────────────────────── */
+[data-message-author-role] pre, [class*="code-block"] {
+  background-color: #221F1C !important;
+  border-color: #333028 !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+}
+
+[data-message-author-role] pre code, [class*="code-block"] code {
+  background-color: transparent !important;
+  color: #E8E3D8 !important;
+  font-family: "JetBrains Mono","Fira Code",Menlo,Consolas,monospace !important;
+}
+
+[class*="code-header"], pre > div:first-child:not(code) {
+  background-color: #1A1714 !important;
+  border-bottom-color: #333028 !important;
+  color: #9B9488 !important;
+}
+
+pre button, [class*="code-header"] button {
+  color: #9B9488 !important; background-color: transparent !important;
+}
+
+pre button:hover { color: #E5E0D5 !important; background-color: #3A3733 !important; }
+
+[data-message-author-role] :not(pre) > code {
+  background-color: #E5E2D8 !important;
+  color: #C05A3A !important;
+  border: 1px solid #D4D1C8 !important;
+  border-radius: 4px !important; padding: 1px 5px !important;
+}
+
+/* ── TABLES ────────────────────────────────────────────────────── */
+[data-message-author-role] th {
+  background-color: #ECEAE3 !important;
+  border-color: #E0DDD5 !important; color: #1A1A18 !important;
+}
+[data-message-author-role] td { border-color: #E0DDD5 !important; }
+[data-message-author-role] tr:nth-child(even) { background-color: #F0EDE6 !important; }
+
+/* ── BLOCKQUOTES ───────────────────────────────────────────────── */
+[data-message-author-role] blockquote {
+  border-left-color: #DA7756 !important;
+  background-color: #F5EBE7 !important;
+  color: #6B6760 !important;
+}
+
+/* ── COMPOSE / INPUT ───────────────────────────────────────────── */
+form, [class*="composer"], [class*="prompt-wrapper"] {
+  background-color: #F4F3EE !important;
+}
+
+#prompt-textarea, [id="prompt-textarea"],
+[contenteditable="true"], [role="textbox"] {
+  background-color: #FFFFFF !important;
+  color: #1A1A18 !important;
+  caret-color: #DA7756 !important;
+}
+
+[class*="composer-parent"], form > div:first-child {
+  background-color: #FFFFFF !important;
+  border-color: #D4D1C8 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 0 0 1px #D4D1C8, 0 2px 8px rgba(26,25,24,0.05) !important;
+}
+
+[class*="composer-parent"]:focus-within,
+form > div:first-child:focus-within {
+  box-shadow: 0 0 0 2px #DA7756 !important;
+  border-color: #DA7756 !important;
+}
+
+::placeholder { color: #9B9690 !important; }
+
+/* ── BUTTONS ───────────────────────────────────────────────────── */
+button[data-testid="send-button"],
+button[aria-label*="Send message"] {
+  background-color: #DA7756 !important;
+  color: #FFFFFF !important; border: none !important;
+  border-radius: 50% !important;
+}
+
+button[data-testid="send-button"]:hover { background-color: #C46645 !important; }
+button[data-testid="send-button"] svg { color: #FFFFFF !important; }
+
+button[data-testid="stop-button"] {
+  background-color: #ECEAE3 !important;
+  color: #1A1A18 !important;
+  border-color: #E0DDD5 !important;
+  border-radius: 8px !important;
+}
+
+form button, [class*="composer"] button { color: #6B6760 !important; }
+form button:hover { background-color: #ECEAE3 !important; color: #1A1A18 !important; }
+
+button[class*="ghost"], button[class*="secondary"] {
+  background-color: transparent !important;
+  border-color: #D4D1C8 !important; color: #1A1A18 !important;
+}
+button[class*="ghost"]:hover { background-color: #ECEAE3 !important; }
+
+/* ── DROPDOWNS / MENUS ─────────────────────────────────────────── */
+[role="menu"], [role="listbox"], [role="dialog"],
+[class*="dropdown-content"], [data-radix-popper-content-wrapper] > div {
+  background-color: #FFFFFF !important;
+  border-color: #E0DDD5 !important; border-radius: 12px !important;
+  box-shadow: 0 4px 24px rgba(26,25,24,0.12) !important;
+  color: #1A1A18 !important;
+}
+
+[role="menuitem"]:hover, [role="option"]:hover,
+[class*="menu-item"]:hover { background-color: #F4F3EE !important; }
+
+[role="option"][aria-selected="true"], [aria-selected="true"] {
+  background-color: #F5EBE7 !important; color: #DA7756 !important;
+}
+
+/* ── AI AVATAR ─────────────────────────────────────────────────── */
+[class*="gizmo-shadow"], [class*="bot-avatar"],
+[data-testid*="avatar"] [class*="bg-"] {
+  background-color: #DA7756 !important;
+}
+
+/* ── SCROLLBARS ────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px !important; height: 5px !important; }
+::-webkit-scrollbar-track { background: transparent !important; }
+::-webkit-scrollbar-thumb { background: #CBC7BE !important; border-radius: 6px !important; }
+
+/* ── TOOLTIPS ──────────────────────────────────────────────────── */
+[role="tooltip"] {
+  background-color: #1A1918 !important;
+  color: #E5E0D5 !important; border-radius: 6px !important;
+}
+
+/* ── TAILWIND UTILITY OVERRIDES ────────────────────────────────── */
+.bg-white, .bg-gray-50 { background-color: #F4F3EE !important; }
+.bg-gray-100, .bg-neutral-100 { background-color: #ECEAE3 !important; }
+.bg-gray-200 { background-color: #E0DDD5 !important; }
+[class*="bg-token-surface-primary"] { background-color: #F4F3EE !important; }
+[class*="bg-token-surface-secondary"] { background-color: #ECEAE3 !important; }
+[class*="bg-token-sidebar-surface-primary"] { background-color: #1A1918 !important; }
+[class*="text-token-text-primary"] { color: #1A1A18 !important; }
+[class*="text-token-text-secondary"] { color: #6B6760 !important; }
+[class*="text-token-text-tertiary"] { color: #9B9690 !important; }
+.bg-green-600, .bg-green-500, .bg-green-400 { background-color: #DA7756 !important; }
+.text-green-600, .text-green-500 { color: #DA7756 !important; }
+[class*="border-token-border-light"] { border-color: #ECEAE3 !important; }
+[class*="border-token-border-default"] { border-color: #E0DDD5 !important; }
+
+/* ── SELECTION + FOCUS ─────────────────────────────────────────── */
+::selection { background-color: #F5EBE7 !important; color: #1A1A18 !important; }
+:focus-visible { outline-color: #DA7756 !important; }
+
+footer, [class*="footer"] {
+  background-color: #F4F3EE !important;
+  color: #9B9690 !important; border-top-color: #E0DDD5 !important;
+}
+
+@media (max-width: 768px) {
+  nav, aside { background-color: #1A1918 !important; }
+  main, [role="main"] { background-color: #F4F3EE !important; }
+}

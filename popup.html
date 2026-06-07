@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Skin</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 276px;
+      background: #F4F3EE;
+      color: #1A1A18;
+      font-family: "DM Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      font-size: 13px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .header {
+      background: #1A1918;
+      padding: 13px 15px;
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .logo {
+      width: 28px; height: 28px; background: #DA7756;
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    .logo-ring {
+      width: 12px; height: 12px;
+      border: 2px solid rgba(255,255,255,0.85);
+      border-radius: 50%;
+    }
+
+    .hname { font-size: 13px; font-weight: 600; color: #E5E0D5; }
+    .hsub  { font-size: 10px; color: #7B7670; margin-top: 1px; }
+
+    .body { padding: 12px 15px 14px; }
+
+    .status {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 500;
+      padding: 4px 10px; border-radius: 20px; margin-bottom: 12px;
+    }
+    .status.on  { background: #F5EBE7; color: #DA7756; }
+    .status.off { background: #ECEAE3; color: #9B9690; }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .status.on  .status-dot { background: #DA7756; }
+    .status.off .status-dot { background: #9B9690; }
+
+    .divider { height: 1px; background: #E0DDD5; margin: 10px 0; }
+
+    .row {
+      display: flex; align-items: center;
+      justify-content: space-between; padding: 3px 0 10px;
+    }
+    .row-label { font-weight: 500; color: #1A1A18; }
+    .row-desc  { font-size: 11px; color: #9B9690; margin-top: 2px; }
+
+    .toggle { position: relative; width: 38px; height: 21px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+
+    .slider {
+      position: absolute; inset: 0;
+      background: #CBC7BE; border-radius: 21px;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .slider::before {
+      content: '';
+      position: absolute; width: 15px; height: 15px;
+      left: 3px; top: 3px;
+      background: white; border-radius: 50%;
+      transition: transform 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+    }
+    .toggle input:checked + .slider { background: #DA7756; }
+    .toggle input:checked + .slider::before { transform: translateX(17px); }
+
+    .reload-btn {
+      display: none; width: 100%;
+      margin-top: 2px; padding: 8px;
+      background: #DA7756; color: white;
+      border: none; border-radius: 8px;
+      font-size: 12px; font-weight: 500;
+      font-family: inherit; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .reload-btn:hover { background: #C46645; }
+    .reload-btn.show  { display: block; }
+
+    .footer {
+      padding-top: 10px;
+      font-size: 10px; color: #9B9690;
+      text-align: center; line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo"><div class="logo-ring"></div></div>
+    <div>
+      <div class="hname">Claude Skin</div>
+      <div class="hsub">ChatGPT &#8594; Claude aesthetic</div>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="status on" id="status">
+      <div class="status-dot"></div>
+      <span id="status-text">Skin active</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="row">
+      <div>
+        <div class="row-label">Enable skin</div>
+        <div class="row-desc">Apply Claude's design to ChatGPT</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="toggle" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <button class="reload-btn" id="reload-btn">Reload ChatGPT tab to apply</button>
+
+    <div class="divider"></div>
+
+    <div class="footer">Active on chatgpt.com &amp; chat.openai.com</div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
