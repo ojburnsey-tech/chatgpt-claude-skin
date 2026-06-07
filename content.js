@@ -1,10 +1,10 @@
 // ================================================================
-//  CLAUDE SKIN FOR CHATGPT — content.js  v1.0.0
+//  CLAUDE SKIN FOR CHATGPT — content.js  v2.0.0  (DARK)
 //
 //  1. Checks chrome.storage for enabled state
 //  2. Injects DM Sans font (via JS to avoid ChatGPT CSP issues)
 //  3. Overrides ChatGPT's dynamically-applied CSS custom properties
-//  4. Suppresses dark mode if ChatGPT tries to force it
+//  4. Forces DARK mode so ChatGPT's native dark styles align with us
 //  5. Replaces the browser tab favicon with a Claude-style mark
 //  6. Patches the page title (ChatGPT -> Claude)
 //  7. MutationObserver re-applies on SPA route changes
@@ -18,26 +18,32 @@
     '@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600' +
     ';1,9..40,400&display=swap';
 
-  // All CSS vars to override on ChatGPT's :root
+  // All CSS vars to override on ChatGPT's :root — Claude DARK palette
   const CLAUDE_VARS = {
-    '--main-surface-primary':      '#F4F3EE',
-    '--main-surface-secondary':    '#ECEAE3',
-    '--main-surface-tertiary':     '#E0DDD5',
-    '--sidebar-surface-primary':   '#1A1918',
-    '--sidebar-surface-secondary': '#242220',
-    '--sidebar-surface-tertiary':  '#2E2C29',
-    '--text-primary':              '#1A1A18',
-    '--text-secondary':            '#6B6760',
-    '--text-tertiary':             '#9B9690',
-    '--border-default':            '#E0DDD5',
-    '--border-light':              '#ECEAE3',
-    '--border-sharp':              '#D4D1C8',
-    '--surface-tertiary':          '#ECEAE3',
-    '--link':                      '#DA7756',
-    '--button-primary-bg':         '#DA7756',
+    '--main-surface-primary':      '#262624',
+    '--main-surface-secondary':    '#1F1E1D',
+    '--main-surface-tertiary':     '#30302E',
+    '--sidebar-surface-primary':   '#1F1E1D',
+    '--sidebar-surface-secondary': '#262624',
+    '--sidebar-surface-tertiary':  '#30302E',
+    '--bg-primary':                '#262624',
+    '--bg-secondary':              '#1F1E1D',
+    '--bg-elevated-secondary':     '#30302E',
+    '--text-primary':              '#F5F4EE',
+    '--text-secondary':            '#C9C6BD',
+    '--text-tertiary':             '#9B968C',
+    '--text-quaternary':           '#75726B',
+    '--border-default':            '#3A3936',
+    '--border-light':              '#2E2D2B',
+    '--border-medium':             '#3A3936',
+    '--border-heavy':              '#4A4845',
+    '--border-sharp':              '#3A3936',
+    '--surface-tertiary':          '#30302E',
+    '--link':                      '#D97757',
+    '--button-primary-bg':         '#D97757',
     '--button-primary-text':       '#FFFFFF',
-    '--icon-default':              '#6B6760',
-    '--icon-bright':               '#1A1A18',
+    '--icon-default':              '#9B968C',
+    '--icon-bright':               '#F5F4EE',
   };
 
   // ── 1. Font injection ────────────────────────────────────────────
@@ -57,16 +63,21 @@
     Object.entries(CLAUDE_VARS).forEach(([k, v]) => style.setProperty(k, v));
   }
 
-  // ── 3. Dark mode suppression ─────────────────────────────────────
-  function suppressDarkMode() {
+  // ── 3. Dark mode enforcement ─────────────────────────────────────
+  // Claude's interface (as targeted here) is dark. Force ChatGPT into
+  // dark mode so its native dark styles line up with our overrides.
+  function forceDarkMode() {
     const html = document.documentElement;
-    html.classList.remove('dark');
-    if (html.getAttribute('data-theme') === 'dark')
-      html.setAttribute('data-theme', 'light');
-    if (html.style.colorScheme === 'dark')
-      html.style.colorScheme = 'light';
-    if (document.body && document.body.style.colorScheme === 'dark')
-      document.body.style.colorScheme = 'light';
+    html.classList.add('dark');
+    html.classList.remove('light');
+    if (html.getAttribute('data-theme') === 'light')
+      html.setAttribute('data-theme', 'dark');
+    html.style.colorScheme = 'dark';
+    if (document.body) {
+      document.body.classList.add('dark');
+      document.body.classList.remove('light');
+      document.body.style.colorScheme = 'dark';
+    }
   }
 
   // ── 4. Favicon replacement ───────────────────────────────────────
@@ -103,7 +114,7 @@
     if (rafId) cancelAnimationFrame(rafId);
     rafId = requestAnimationFrame(() => {
       applyCSSVars();
-      suppressDarkMode();
+      forceDarkMode();
       patchTitle();
     });
   });
@@ -112,7 +123,7 @@
   function init() {
     injectFont();
     applyCSSVars();
-    suppressDarkMode();
+    forceDarkMode();
     replaceFavicon();
     patchTitle();
 
@@ -142,7 +153,7 @@
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
         applyCSSVars();
-        suppressDarkMode();
+        forceDarkMode();
         replaceFavicon();
         patchTitle();
         if (document.body)
@@ -152,7 +163,7 @@
 
     window.addEventListener('load', () => {
       applyCSSVars();
-      suppressDarkMode();
+      forceDarkMode();
       replaceFavicon();
     });
   });
