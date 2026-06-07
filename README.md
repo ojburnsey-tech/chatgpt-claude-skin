@@ -5,19 +5,23 @@ identity to ChatGPT. Built from scratch with Claude Code.
 
 ## What it changes
 
-| Element    | ChatGPT original          | Claude skin              |
-|------------|--------------------------|--------------------------|
-| Canvas     | #FFFFFF white            | #F4F3EE warm cream       |
-| Sidebar    | #202123 cool grey        | #1A1918 warm charcoal    |
-| Accent     | #10A37F OpenAI green     | #DA7756 coral/terracotta |
-| Messages   | Pill bubbles             | Flat, bubble-free layout |
-| Typography | Default system font      | DM Sans                  |
-| Input ring | Green focus border       | Coral focus ring         |
-| Send btn   | Green circle             | Coral circle             |
-| Inline code| Grey on white            | Rust on warm cream       |
-| Code blocks| Dark grey                | Warm near-black #221F1C  |
-| Favicon    | OpenAI logo              | Claude coral ring mark   |
-| Tab title  | "ChatGPT"                | "Claude"                 |
+Recreates Claude's warm **dark** theme on top of ChatGPT.
+
+| Element    | ChatGPT original          | Claude skin (dark)         |
+|------------|--------------------------|----------------------------|
+| Canvas     | white / grey             | #262624 warm dark charcoal |
+| Sidebar    | #202123 cool grey        | #1F1E1D warm near-black    |
+| Text       | dark on light            | #F5F4EE light cream        |
+| Greeting   | system sans              | warm serif, cream          |
+| Accent     | #10A37F OpenAI green     | #D97757 coral/terracotta   |
+| Messages   | Pill bubbles             | Flat assistant, dark user bubble |
+| Typography | Default system font      | DM Sans (UI), serif headline |
+| Input box  | White, green ring        | #30302E dark, rounded      |
+| Send btn   | Green                    | Coral                      |
+| Inline code| Grey on white            | Rust on dark wash          |
+| Code blocks| Dark grey                | Warm near-black #1A1917    |
+| Favicon    | OpenAI logo              | Claude coral ring mark     |
+| Tab title  | "ChatGPT"                | "Claude"                   |
 
 ## File structure
 
@@ -74,7 +78,8 @@ of `content.css` under the `CLAUDE DESIGN TOKENS` section.
   Policy blocks it, font injection silently fails — all other skin
   rules still apply normally.
 
-- The skin forces light mode. Claude's interface has no dark theme.
+- The skin forces dark mode to match Claude's dark interface. ChatGPT's
+  own light/dark toggle is overridden while the skin is enabled.
 
 ## Toggle
 
