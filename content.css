@@ -7,23 +7,23 @@
 
 /* ── CLAUDE DARK DESIGN TOKENS ─────────────────────────────────── */
 :root {
-  /* Surfaces */
-  --cl-bg-main:        #262624;  /* main conversation canvas        */
-  --cl-bg-sidebar:     #1F1E1D;  /* left nav / sidebar              */
-  --cl-bg-sidebar-2:   #262624;  /* sidebar hover / raised          */
-  --cl-bg-sidebar-3:   #30302E;  /* sidebar active / selected       */
-  --cl-surface:        #30302E;  /* input box, cards, menus         */
-  --cl-surface-2:      #3A3936;  /* hover on surfaces               */
-  --cl-surface-3:      #44423E;  /* active on surfaces              */
+  /* Surfaces — unified flat #1F1F1E base, subtle elevations only */
+  --cl-bg-main:        #1F1F1E;  /* main conversation canvas        */
+  --cl-bg-sidebar:     #1F1F1E;  /* left nav / sidebar              */
+  --cl-bg-sidebar-2:   #2A2A28;  /* sidebar hover / raised          */
+  --cl-bg-sidebar-3:   #333330;  /* sidebar active / selected       */
+  --cl-surface:        #2A2A28;  /* input box, cards, menus         */
+  --cl-surface-2:      #333330;  /* hover on surfaces               */
+  --cl-surface-3:      #3D3D39;  /* active on surfaces              */
 
   /* Borders */
-  --cl-border:         #3A3936;
-  --cl-border-soft:    #2E2D2B;
-  --cl-border-strong:  #4A4845;
+  --cl-border:         #333330;
+  --cl-border-soft:    #2A2A28;
+  --cl-border-strong:  #45453F;
 
   /* Text */
   --cl-text:           #F5F4EE;  /* primary light cream             */
-  --cl-text-2:         #C9C6BD;  /* secondary                       */
+  --cl-text-2:         #D4D1C8;  /* secondary (sidebar items)       */
   --cl-text-3:         #9B968C;  /* tertiary / labels               */
   --cl-text-faint:     #75726B;  /* faintest                        */
   --cl-heading:        #E8E2D5;  /* serif greeting cream            */
@@ -34,28 +34,28 @@
   --cl-coral-soft:     #3A2A22;  /* coral-tinted dark wash          */
 
   /* ── Remap ChatGPT's own CSS variables to Claude DARK values ── */
-  --main-surface-primary:        #262624;
-  --main-surface-secondary:      #1F1E1D;
-  --main-surface-tertiary:       #30302E;
-  --sidebar-surface-primary:     #1F1E1D;
-  --sidebar-surface-secondary:   #262624;
-  --sidebar-surface-tertiary:    #30302E;
+  --main-surface-primary:        #1F1F1E;
+  --main-surface-secondary:      #1F1F1E;
+  --main-surface-tertiary:       #2A2A28;
+  --sidebar-surface-primary:     #1F1F1E;
+  --sidebar-surface-secondary:   #1F1F1E;
+  --sidebar-surface-tertiary:    #2A2A28;
 
-  --bg-primary:                  #262624;
-  --bg-secondary:                #1F1E1D;
-  --bg-elevated-secondary:       #30302E;
+  --bg-primary:                  #1F1F1E;
+  --bg-secondary:                #1F1F1E;
+  --bg-elevated-secondary:       #2A2A28;
 
   --text-primary:                #F5F4EE;
-  --text-secondary:              #C9C6BD;
+  --text-secondary:              #D4D1C8;
   --text-tertiary:               #9B968C;
   --text-quaternary:             #75726B;
 
-  --border-default:              #3A3936;
-  --border-light:                #2E2D2B;
-  --border-medium:               #3A3936;
-  --border-heavy:                #4A4845;
-  --border-sharp:                #3A3936;
-  --surface-tertiary:            #30302E;
+  --border-default:              #333330;
+  --border-light:                #2A2A28;
+  --border-medium:               #333330;
+  --border-heavy:                #45453F;
+  --border-sharp:                #333330;
+  --surface-tertiary:            #2A2A28;
 
   --link:                        #D97757;
   --button-primary-bg:           #D97757;
@@ -98,6 +98,21 @@ main h2:first-of-type,
   font-weight: 400 !important;
   letter-spacing: 0.2px !important;
 }
+
+/* Coral ChatGPT logo injected (by content.js) beside the greeting */
+.claude-skin-spark {
+  display: inline-flex !important;
+  align-items: center !important;
+  margin-right: 0.34em !important;
+  vertical-align: -0.12em !important;
+}
+.claude-skin-spark svg {
+  width: 0.92em !important;
+  height: 0.92em !important;
+  color: var(--cl-coral) !important;
+  fill: var(--cl-coral) !important;
+}
+.claude-skin-spark svg path { fill: var(--cl-coral) !important; }
 
 /* ── SIDEBAR / NAV ─────────────────────────────────────────────── */
 nav, aside, [class*="sidebar"], [class*="nav-bar"] {
@@ -144,7 +159,21 @@ aside [aria-selected="true"] {
   background-color: var(--cl-bg-sidebar-2) !important;
 }
 
-nav svg, aside svg { color: var(--cl-text-3) !important; }
+/* Sidebar item icons — bright like the Claude reference, not dimmed */
+nav svg, aside svg { color: var(--cl-text-2) !important; }
+nav a svg, nav li svg, nav button svg { color: var(--cl-text-2) !important; }
+
+/* Brand wordmark / logo at top of sidebar → coral #D97757 */
+[aria-label="ChatGPT"], a[aria-label*="ChatGPT"],
+[aria-label="ChatGPT"] svg, a[aria-label*="ChatGPT"] svg,
+nav a[href="/"] svg, nav > div:first-child svg,
+header h1 svg, [class*="brand"] svg {
+  color: var(--cl-coral) !important;
+  fill: var(--cl-coral) !important;
+}
+[aria-label="ChatGPT"] svg path, a[aria-label*="ChatGPT"] svg path {
+  fill: var(--cl-coral) !important;
+}
 
 nav::-webkit-scrollbar { width: 4px !important; }
 nav::-webkit-scrollbar-track { background: transparent !important; }
