@@ -127,13 +127,14 @@ main h2:first-of-type,
   vertical-align: -0.14em !important;
 }
 .claude-skin-spark svg {
-  width: 1.15em !important;
-  height: 1.15em !important;
+  width: 1.2em !important;
+  height: 1.2em !important;
   color: var(--cl-coral) !important;
-  stroke: var(--cl-coral) !important;
-  fill: none !important;
+  fill: var(--cl-coral) !important;
+  stroke: none !important;
 }
-.claude-skin-spark svg line { stroke: var(--cl-coral) !important; }
+.claude-skin-spark svg path,
+.claude-skin-spark svg circle { fill: var(--cl-coral) !important; }
 
 /* ── SIDEBAR / NAV ─────────────────────────────────────────────── */
 nav, aside, [class*="sidebar"], [class*="nav-bar"] {
@@ -196,17 +197,22 @@ header h1 svg, [class*="brand"] svg {
   fill: var(--cl-coral) !important;
 }
 
-/* Brand asterisk tagged by content.js — coral, matches the greeting mark */
+/* Replaced ChatGPT logos → filled coral starburst (keeps original size) */
 svg.claude-skin-brand,
-.claude-skin-brand svg {
+.claude-skin-brand svg,
+.claude-skin-brand-wrap svg {
   color: var(--cl-coral) !important;
-  stroke: var(--cl-coral) !important;
-  fill: none !important;
-  width: 30px !important;
-  height: 30px !important;
+  fill: var(--cl-coral) !important;
+  stroke: none !important;
 }
-svg.claude-skin-brand line, .claude-skin-brand svg line {
-  stroke: var(--cl-coral) !important;
+svg.claude-skin-brand path, .claude-skin-brand svg path,
+svg.claude-skin-brand circle, .claude-skin-brand svg circle,
+.claude-skin-brand-wrap path, .claude-skin-brand-wrap circle {
+  fill: var(--cl-coral) !important;
+}
+/* Only the top-left corner brand is enlarged a touch */
+svg.claude-skin-brand-corner {
+  width: 30px !important; height: 30px !important;
 }
 
 /* Sidebar rhythm — Claude spaces its icons/items with more air and
@@ -220,8 +226,8 @@ nav a[href], nav > div > a, nav > div > button[aria-label] {
 nav [aria-label="New chat"], nav [data-testid="create-new-chat-button"] {
   margin-top: 14px !important;
 }
-/* Brand logo enlarged to match the greeting mark */
-.claude-skin-brand { width: 30px !important; height: 30px !important; }
+/* Corner brand logo enlarged a touch */
+.claude-skin-brand-corner { width: 30px !important; height: 30px !important; }
 
 nav::-webkit-scrollbar { width: 4px !important; }
 nav::-webkit-scrollbar-track { background: transparent !important; }

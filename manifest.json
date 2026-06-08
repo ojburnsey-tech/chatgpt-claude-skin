@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Claude Skin — ChatGPT",
-  "version": "2.3.0",
-  "description": "Applies Claude's warm dark design identity to ChatGPT.",
+  "name": "Claude Skin",
+  "version": "2.4.0",
+  "description": "Applies Claude's warm, dark design identity.",
   "content_scripts": [
     {
       "matches": [

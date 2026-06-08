@@ -47,28 +47,33 @@
     '--icon-bright':               '#F5F4EE',
   };
 
-  // Claude's coral sunburst/asterisk mark (✻) — 12 rounded spokes radiating
-  // from centre. Built once so both the greeting mark and the top-left brand
-  // logo are pixel-identical. MARK_LINES is the inner geometry (no <svg>).
-  const MARK_LINES = (function () {
-    const cx = 12, cy = 12, ri = 1.6, ro = 9.4, n = 12;
-    let s = '';
+  // Claude coral starburst logo (the uploaded mark) — 12 filled tapered
+  // spokes + centre hub, with mild organic length variation. Built once so
+  // every place we stamp it (greeting, brand, favicon, any ChatGPT logo)
+  // is identical. STAR_INNER is the geometry (no <svg> wrapper).
+  const STAR_PATH = (function () {
+    const cx = 290, cy = 290, n = 12;
+    const ri = 50, rm = 146, hw = 36;   // base radius, shoulder radius, half-width
+    let d = '';
     for (let i = 0; i < n; i++) {
-      const a = (Math.PI * 2 * i) / n - Math.PI / 2;
-      const x1 = (cx + ri * Math.cos(a)).toFixed(2);
-      const y1 = (cy + ri * Math.sin(a)).toFixed(2);
-      const x2 = (cx + ro * Math.cos(a)).toFixed(2);
-      const y2 = (cy + ro * Math.sin(a)).toFixed(2);
-      s += '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 +
-           '" y2="' + y2 + '"/>';
+      const a  = (Math.PI * 2 * i) / n - Math.PI / 2;
+      const ca = Math.cos(a), sa = Math.sin(a);
+      const ro = 268 + 16 * Math.sin(i * 2.7);   // tip radius, slight wobble
+      const P  = (x, y) =>
+        (cx + x * ca - y * sa).toFixed(1) + ',' +
+        (cy + x * sa + y * ca).toFixed(1);
+      d += 'M' + P(ri, 0) + 'L' + P(rm, hw) + 'L' + P(ro, 0) +
+           'L' + P(rm, -hw) + 'Z';
     }
-    return s;
+    return d;
   })();
 
-  const CLAUDE_MARK =
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" ' +
-    'stroke="#D97757" stroke-width="2.1" stroke-linecap="round" ' +
-    'aria-hidden="true">' + MARK_LINES + '</svg>';
+  const STAR_INNER =
+    '<circle cx="290" cy="290" r="54"/><path d="' + STAR_PATH + '"/>';
+
+  const CLAUDE_STAR =
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 580" ' +
+    'fill="#D97757" aria-hidden="true">' + STAR_INNER + '</svg>';
 
   // ── 1. Font injection ────────────────────────────────────────────
   function injectFont() {
@@ -111,16 +116,9 @@
 
   // ── 4. Favicon replacement ───────────────────────────────────────
   function replaceFavicon() {
-    // Minimal SVG approximating Claude's ring mark in coral
-    const svg = [
-      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">',
-        '<rect width="64" height="64" rx="14" fill="#F4F3EE"/>',
-        '<circle cx="32" cy="32" r="15" fill="#DA7756"/>',
-        '<circle cx="32" cy="32" r="8" fill="#F4F3EE" opacity="0.55"/>',
-      '</svg>',
-    ].join('');
+    // The Claude coral starburst on a transparent tile
     const url = URL.createObjectURL(
-      new Blob([svg], { type: 'image/svg+xml' })
+      new Blob([CLAUDE_STAR], { type: 'image/svg+xml' })
     );
     let link = document.querySelector("link[rel~='icon']");
     if (!link) {
@@ -155,47 +153,95 @@
     const spark = document.createElement('span');
     spark.className = 'claude-skin-spark';
     spark.setAttribute('aria-hidden', 'true');
-    spark.innerHTML = CLAUDE_MARK;
+    spark.innerHTML = CLAUDE_STAR;
     h.insertBefore(spark, h.firstChild);
   }
 
-  // ── 4c. Brand logo (top-left) → coral, slightly bigger ───────────
-  function recolorBrandLogo() {
-    let host = document.querySelector(
-      '[aria-label="ChatGPT"], a[aria-label*="ChatGPT" i]'
-    );
-    let svg = host
-      ? (host.matches('svg') ? host : host.querySelector('svg'))
-      : null;
-
-    if (!svg) {
-      // Heuristic: the top-left-most icon in the sidebar header that is
-      // NOT the panel toggle or a swapped nav icon.
-      const nav = document.querySelector('nav, aside, header');
-      if (nav) {
-        let best = null, bestScore = Infinity;
-        nav.querySelectorAll('svg').forEach((s) => {
-          if (s.classList.contains('claude-skin-icon')) return;
-          const btn = s.closest('button, a');
-          const lbl = ((btn && btn.getAttribute('aria-label')) || '')
-            .toLowerCase();
-          if (/sidebar|close|open|toggle|collapse/.test(lbl)) return;
-          const r = s.getBoundingClientRect();
-          if (!r.width || r.top > 96 || r.left > 160) return;
-          const score = r.left + r.top;
-          if (score < bestScore) { bestScore = score; best = s; }
-        });
-        svg = best;
-      }
-    }
+  // ── 4c. Replace EVERY ChatGPT logo with the Claude starburst ─────
+  // Turn an existing <svg> into the Claude star (keeps it in place/sized).
+  function setStar(svg) {
     if (!svg || svg.classList.contains('claude-skin-brand')) return;
-    svg.setAttribute('viewBox', '0 0 24 24');
-    svg.setAttribute('fill', 'none');
-    svg.setAttribute('stroke', '#D97757');
-    svg.setAttribute('stroke-width', '2.1');
-    svg.setAttribute('stroke-linecap', 'round');
-    svg.innerHTML = MARK_LINES;
+    svg.setAttribute('viewBox', '0 0 580 580');
+    svg.setAttribute('fill', '#D97757');
+    svg.removeAttribute('stroke');
+    svg.innerHTML = STAR_INNER;
     svg.classList.add('claude-skin-brand');
+  }
+
+  function replaceLogos() {
+    // 1. Any explicitly ChatGPT-labelled logo (sidebar brand, header, etc.)
+    document.querySelectorAll(
+      '[aria-label="ChatGPT"] svg, a[aria-label*="ChatGPT" i] svg, ' +
+      '[data-testid*="brand" i] svg, [class*="brand" i] svg'
+    ).forEach(setStar);
+
+    // 2. <img> logos (alt text mentions ChatGPT/OpenAI) → swap for the star
+    document.querySelectorAll(
+      'img[alt*="ChatGPT" i], img[alt*="OpenAI" i], img[src*="openai" i]'
+    ).forEach((img) => {
+      if (img.dataset.claudeSkin) return;
+      img.dataset.claudeSkin = '1';
+      const span = document.createElement('span');
+      span.className = 'claude-skin-brand-wrap';
+      span.style.cssText =
+        'display:inline-flex;width:' + (img.width || 24) + 'px;height:' +
+        (img.height || 24) + 'px;';
+      span.innerHTML = CLAUDE_STAR;
+      img.replaceWith(span);
+    });
+
+    // 3. Assistant avatar marks (the little ChatGPT logo by replies)
+    document.querySelectorAll(
+      '[data-message-author-role="assistant"] [class*="avatar"] svg, ' +
+      '[data-testid*="avatar" i] svg, [class*="gizmo"] svg'
+    ).forEach(setStar);
+
+    // 4. Top-left corner brand by position (when it carries no label)
+    const nav = document.querySelector('nav, aside, header');
+    if (nav) {
+      let best = null, bestScore = Infinity;
+      nav.querySelectorAll('svg').forEach((s) => {
+        if (s.classList.contains('claude-skin-icon') ||
+            s.classList.contains('claude-skin-brand')) return;
+        const btn = s.closest('button, a');
+        const lbl = ((btn && btn.getAttribute('aria-label')) || '')
+          .toLowerCase();
+        if (/sidebar|close|open|toggle|collapse/.test(lbl)) return;
+        const r = s.getBoundingClientRect();
+        if (!r.width || r.top > 96 || r.left > 160) return;
+        const score = r.left + r.top;
+        if (score < bestScore) { bestScore = score; best = s; }
+      });
+      if (best) { setStar(best); best.classList.add('claude-skin-brand-corner'); }
+    }
+  }
+
+  // ── 4c-2. Relabel every visible "ChatGPT" → "Claude" ─────────────
+  function relabelText() {
+    if (!document.body) return;
+    const walker = document.createTreeWalker(
+      document.body, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          if (!node.nodeValue || node.nodeValue.indexOf('ChatGPT') === -1)
+            return NodeFilter.FILTER_REJECT;
+          const p = node.parentNode;
+          if (!p) return NodeFilter.FILTER_REJECT;
+          const tag = p.nodeName;
+          if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'TEXTAREA')
+            return NodeFilter.FILTER_REJECT;
+          // never touch what the user is typing
+          if (p.closest && p.closest(
+              '#prompt-textarea, [contenteditable="true"], input, textarea'))
+            return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        },
+      }
+    );
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach((n) => {
+      n.nodeValue = n.nodeValue.replace(/ChatGPT/g, 'Claude');
+    });
   }
 
   // ── 4d. Sidebar icons → Claude-style line glyphs ─────────────────
@@ -275,7 +321,8 @@
 
   function applyDynamicArt() {
     addGreetingLogo();
-    recolorBrandLogo();
+    replaceLogos();
+    relabelText();
     swapSidebarIcons();
     styleComposer();
   }
