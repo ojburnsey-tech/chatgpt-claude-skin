@@ -12,21 +12,22 @@
   --cl-bg-sidebar:     #1F1F1E;  /* left nav / sidebar              */
   --cl-bg-sidebar-2:   #2A2A28;  /* sidebar hover / raised          */
   --cl-bg-sidebar-3:   #333330;  /* sidebar active / selected       */
-  --cl-surface:        #2A2A28;  /* input box, cards, menus         */
+  --cl-surface:        #2A2A28;  /* cards, menus                    */
   --cl-surface-2:      #333330;  /* hover on surfaces               */
   --cl-surface-3:      #3D3D39;  /* active on surfaces              */
+  --cl-input:          #2C2C2A;  /* prompt / composer box           */
 
   /* Borders */
   --cl-border:         #333330;
   --cl-border-soft:    #2A2A28;
   --cl-border-strong:  #45453F;
 
-  /* Text */
-  --cl-text:           #F5F4EE;  /* primary light cream             */
-  --cl-text-2:         #D4D1C8;  /* secondary (sidebar items)       */
-  --cl-text-3:         #9B968C;  /* tertiary / labels               */
-  --cl-text-faint:     #75726B;  /* faintest                        */
-  --cl-heading:        #E8E2D5;  /* serif greeting cream            */
+  /* Text — unified Claude sand #CCC9AF */
+  --cl-text:           #CCC9AF;  /* primary                         */
+  --cl-text-2:         #CCC9AF;  /* secondary (sidebar items)       */
+  --cl-text-3:         #CCC9AF;  /* tertiary / labels               */
+  --cl-text-faint:     #ABA890;  /* faintest                        */
+  --cl-heading:        #CCC9AF;  /* greeting                        */
 
   /* Accent */
   --cl-coral:          #D97757;
@@ -45,10 +46,10 @@
   --bg-secondary:                #1F1F1E;
   --bg-elevated-secondary:       #2A2A28;
 
-  --text-primary:                #F5F4EE;
-  --text-secondary:              #D4D1C8;
-  --text-tertiary:               #9B968C;
-  --text-quaternary:             #75726B;
+  --text-primary:                #CCC9AF;
+  --text-secondary:              #CCC9AF;
+  --text-tertiary:               #CCC9AF;
+  --text-quaternary:             #ABA890;
 
   --border-default:              #333330;
   --border-light:                #2A2A28;
@@ -67,8 +68,10 @@
 }
 
 /* ── GLOBAL ────────────────────────────────────────────────────── */
+/* Anthropic's UI sans (Styrene) first; falls back to a close grotesque */
 * {
-  font-family: "DM Sans", -apple-system, BlinkMacSystemFont,
+  font-family: "Styrene B", "Styrene A", "StyreneB", "Soehne",
+    "DM Sans", "Inter", -apple-system, BlinkMacSystemFont,
     "Segoe UI", "Helvetica Neue", system-ui, sans-serif !important;
 }
 
@@ -81,34 +84,52 @@ html.light, html[data-theme="light"], body.light {
 }
 
 /* ── LAYOUT ────────────────────────────────────────────────────── */
-#__next, main, [role="main"],
-[class*="main-content"], [class*="conversation"] {
+/* Force the ENTIRE canvas to #1F1F1E — including the lower region
+   below the prompt bar and ChatGPT's composer fade overlay. */
+#__next, #__next > div, #__next > div > div,
+main, main > div, main > div > div,
+[role="main"], [role="presentation"],
+[class*="main-content"], [class*="conversation"],
+[class*="react-scroll-to-bottom"],
+[class*="thread"], [class*="thread-bottom"],
+[class*="composer-bg"], [class*="composer-container"] > div {
   background-color: var(--cl-bg-main) !important;
   color: var(--cl-text) !important;
 }
 
-/* The greeting headline — Claude renders it in a warm serif */
+/* Kill ChatGPT's gradient fade above/around the composer */
+main [class*="bg-gradient"], main [style*="gradient"],
+[class*="composer"] [class*="gradient"],
+[class*="thread-bottom"] [class*="gradient"] {
+  background-image: none !important;
+  background-color: var(--cl-bg-main) !important;
+}
+
+/* The greeting headline — Claude renders it in a warm serif, larger */
 main h1,
 main h1 *,
 main h2:first-of-type,
 [class*="empty-state"] h1,
 [class*="welcome"] h1 {
-  font-family: Georgia, "Times New Roman", "Tiempos Text", serif !important;
+  font-family: "Tiempos Text", "Copernicus", Georgia,
+    "Times New Roman", serif !important;
   color: var(--cl-heading) !important;
   font-weight: 400 !important;
   letter-spacing: 0.2px !important;
+  font-size: 2.6rem !important;
+  line-height: 1.15 !important;
 }
 
 /* Coral ChatGPT logo injected (by content.js) beside the greeting */
 .claude-skin-spark {
   display: inline-flex !important;
   align-items: center !important;
-  margin-right: 0.34em !important;
-  vertical-align: -0.12em !important;
+  margin-right: 0.36em !important;
+  vertical-align: -0.14em !important;
 }
 .claude-skin-spark svg {
-  width: 0.92em !important;
-  height: 0.92em !important;
+  width: 1.05em !important;
+  height: 1.05em !important;
   color: var(--cl-coral) !important;
   fill: var(--cl-coral) !important;
 }
@@ -172,6 +193,19 @@ header h1 svg, [class*="brand"] svg {
   fill: var(--cl-coral) !important;
 }
 [aria-label="ChatGPT"] svg path, a[aria-label*="ChatGPT"] svg path {
+  fill: var(--cl-coral) !important;
+}
+
+/* Brand logo tagged by content.js — coral and slightly enlarged */
+svg.claude-skin-brand,
+.claude-skin-brand svg {
+  color: var(--cl-coral) !important;
+  fill: var(--cl-coral) !important;
+  width: 32px !important;
+  height: 32px !important;
+  transform: scale(1.0) !important;
+}
+svg.claude-skin-brand path, .claude-skin-brand svg path {
   fill: var(--cl-coral) !important;
 }
 
@@ -302,15 +336,25 @@ form, [class*="composer"], [class*="prompt-wrapper"] {
 [contenteditable="true"], [role="textbox"] {
   background-color: transparent !important;
   color: var(--cl-text) !important;
-  caret-color: var(--cl-coral) !important;
+  caret-color: #FFFFFF !important;   /* white flashing caret */
 }
 
+/* The prompt box — taller, fully #2C2C2A */
 [class*="composer-parent"], form > div:first-child,
-[class*="composer-container"] {
-  background-color: var(--cl-surface) !important;
+[class*="composer-container"], [class*="composer-bg"] > div {
+  background-color: var(--cl-input) !important;
   border: 1px solid var(--cl-border) !important;
-  border-radius: 18px !important;
+  border-radius: 24px !important;
   box-shadow: 0 2px 12px rgba(0,0,0,0.25) !important;
+}
+
+/* Give the prompt box real vertical height */
+[class*="composer-parent"], [class*="composer-container"] {
+  min-height: 108px !important;
+}
+#prompt-textarea, [id="prompt-textarea"] {
+  min-height: 56px !important;
+  padding-top: 6px !important;
 }
 
 [class*="composer-parent"]:focus-within,
@@ -318,6 +362,16 @@ form > div:first-child:focus-within {
   border-color: var(--cl-surface-3) !important;
   box-shadow: 0 2px 16px rgba(0,0,0,0.35) !important;
 }
+
+/* Composer icons, the + button and any glyphs → white */
+[class*="composer"] svg, form svg,
+[class*="composer"] button svg, form button svg,
+[aria-label*="Add" i] svg, [data-testid*="plus"] svg,
+[aria-label*="Dictate" i] svg, [aria-label*="voice" i] svg {
+  color: #FFFFFF !important;
+  fill: #FFFFFF !important;
+}
+[class*="composer"] button, form button { color: #FFFFFF !important; }
 
 ::placeholder { color: var(--cl-text-3) !important; }
 [contenteditable="true"][data-placeholder]::before,
@@ -340,20 +394,24 @@ button[data-testid="stop-button"] {
   border-radius: 8px !important;
 }
 
-form button, [class*="composer"] button { color: var(--cl-text-2) !important; }
+form button, [class*="composer"] button { color: #FFFFFF !important; }
 form button:hover {
-  background-color: var(--cl-surface-2) !important; color: var(--cl-text) !important;
+  background-color: var(--cl-surface-2) !important; color: #FFFFFF !important;
 }
 
-/* Suggestion / action pills (Create an image, Write or edit, …) */
+/* Suggestion / action boxes below the prompt — squarer, lightly rounded */
 [class*="suggestion"], main button[class*="rounded-full"] {
-  background-color: var(--cl-surface) !important;
+  background-color: var(--cl-input) !important;
   border: 1px solid var(--cl-border) !important;
-  color: var(--cl-text-2) !important;
-  border-radius: 12px !important;
+  color: var(--cl-text) !important;
+  border-radius: 10px !important;
 }
 [class*="suggestion"]:hover, main button[class*="rounded-full"]:hover {
   background-color: var(--cl-surface-2) !important; color: var(--cl-text) !important;
+}
+/* Keep suggestion-box glyph icons visible (not forced white like composer) */
+[class*="suggestion"] svg, main button[class*="rounded-full"] svg {
+  color: var(--cl-text) !important; fill: currentColor !important;
 }
 
 button[class*="ghost"], button[class*="secondary"] {
