@@ -358,35 +358,37 @@ form, [class*="composer"], [class*="prompt-wrapper"],
   caret-color: #FFFFFF !important;   /* white flashing caret */
 }
 
-/* The prompt box itself — fully #2C2C2A, taller, toolbar at the bottom.
-   .claude-skin-composer is tagged by content.js on the real box so the
-   colour never leaks onto a full-width wrapper. */
-.claude-skin-composer,
-[class*="composer-parent"], form > div:first-child {
+/* The prompt box itself — fully #2C2C2A. ONLY the single JS-tagged
+   element paints, so there is never a box-inside-a-box (the cause of the
+   lighter empty region before you type). */
+.claude-skin-composer {
   background-color: var(--cl-input) !important;
   border: 1px solid var(--cl-border) !important;
   border-radius: 26px !important;
   box-shadow: 0 2px 12px rgba(0,0,0,0.25) !important;
 }
-
-/* Real vertical height + push the toolbar row to the bottom */
-.claude-skin-composer, [class*="composer-parent"] {
-  min-height: 116px !important;
-  display: flex !important;
-  flex-direction: column !important;
-}
-.claude-skin-composer > :last-child { margin-top: auto !important; }
-
-#prompt-textarea, [id="prompt-textarea"] {
-  min-height: 48px !important;
-  padding-top: 4px !important;
-}
-
-.claude-skin-composer:focus-within,
-[class*="composer-parent"]:focus-within,
-form > div:first-child:focus-within {
+.claude-skin-composer:focus-within {
   border-color: var(--cl-surface-3) !important;
   box-shadow: 0 2px 16px rgba(0,0,0,0.35) !important;
+}
+
+/* Flatten every element inside the box so no nested surface/border shows
+   — this keeps the box one uniform colour in BOTH empty and typed states. */
+.claude-skin-composer > *,
+.claude-skin-composer [class*="composer"],
+.claude-skin-composer [class*="bg-token"],
+.claude-skin-composer [class*="rounded"] {
+  background-color: transparent !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* The tall Claude look comes from a tall typing area (consistent empty
+   or typed), not from forcing the box height + repositioning rows. */
+#prompt-textarea, [id="prompt-textarea"] {
+  min-height: 64px !important;
+  padding-top: 6px !important;
 }
 
 /* Composer icons, the + button and any glyphs → white */
