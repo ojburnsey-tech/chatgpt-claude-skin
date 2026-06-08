@@ -119,7 +119,7 @@ main h2:first-of-type,
   line-height: 1.15 !important;
 }
 
-/* Coral ChatGPT logo injected (by content.js) beside the greeting */
+/* Coral Claude asterisk (✻) injected (by content.js) beside the greeting */
 .claude-skin-spark {
   display: inline-flex !important;
   align-items: center !important;
@@ -127,12 +127,13 @@ main h2:first-of-type,
   vertical-align: -0.14em !important;
 }
 .claude-skin-spark svg {
-  width: 1.05em !important;
-  height: 1.05em !important;
+  width: 1.15em !important;
+  height: 1.15em !important;
   color: var(--cl-coral) !important;
-  fill: var(--cl-coral) !important;
+  stroke: var(--cl-coral) !important;
+  fill: none !important;
 }
-.claude-skin-spark svg path { fill: var(--cl-coral) !important; }
+.claude-skin-spark svg line { stroke: var(--cl-coral) !important; }
 
 /* ── SIDEBAR / NAV ─────────────────────────────────────────────── */
 nav, aside, [class*="sidebar"], [class*="nav-bar"] {
@@ -195,17 +196,17 @@ header h1 svg, [class*="brand"] svg {
   fill: var(--cl-coral) !important;
 }
 
-/* Brand logo tagged by content.js — coral and slightly enlarged */
+/* Brand asterisk tagged by content.js — coral, matches the greeting mark */
 svg.claude-skin-brand,
 .claude-skin-brand svg {
   color: var(--cl-coral) !important;
-  fill: var(--cl-coral) !important;
-  width: 32px !important;
-  height: 32px !important;
-  transform: scale(1.0) !important;
+  stroke: var(--cl-coral) !important;
+  fill: none !important;
+  width: 30px !important;
+  height: 30px !important;
 }
-svg.claude-skin-brand path, .claude-skin-brand svg path {
-  fill: var(--cl-coral) !important;
+svg.claude-skin-brand line, .claude-skin-brand svg line {
+  stroke: var(--cl-coral) !important;
 }
 
 /* Sidebar rhythm — Claude spaces its icons/items with more air and
@@ -235,15 +236,25 @@ header, [class*="header"], [class*="top-bar"] {
 }
 header * { color: var(--cl-text) !important; }
 
+/* Model picker — both the header switcher and the in-composer selector,
+   styled like Claude's "Sonnet 4.6 · High" pill (quiet, muted, subtle hover) */
 [class*="model-switcher"], [class*="model-selector"],
-button[aria-haspopup][class*="text-sm"] {
+button[aria-haspopup][class*="text-sm"],
+[data-testid*="model" i], [class*="composer"] button[aria-label*="model" i] {
   background-color: transparent !important;
   border-color: transparent !important;
   color: var(--cl-text) !important;
   border-radius: 8px !important;
+  font-weight: 500 !important;
 }
-[class*="model-switcher"]:hover, [class*="model-selector"]:hover {
+[class*="model-switcher"]:hover, [class*="model-selector"]:hover,
+[data-testid*="model" i]:hover {
   background-color: var(--cl-surface) !important;
+}
+/* The secondary reasoning-effort segment (Claude's muted "High") */
+[data-testid*="model" i] [class*="text-token-text-tertiary"],
+[class*="model-switcher"] [class*="secondary"] {
+  color: var(--cl-text-3) !important;
 }
 
 /* ── MESSAGES ──────────────────────────────────────────────────── */
@@ -254,15 +265,16 @@ button[aria-haspopup][class*="text-sm"] {
   color: var(--cl-text) !important;
 }
 
-/* User bubble — raised warm dark surface */
+/* User bubble — Claude's #2C2C2A rounded bubble, borderless */
 [data-message-author-role="user"] [class*="rounded"],
 [data-message-author-role="user"] [class*="bg-"],
 [data-message-author-role="user"] > div > div {
-  background-color: var(--cl-surface) !important;
-  border-color: var(--cl-border) !important;
+  background-color: var(--cl-input) !important;
+  border-color: transparent !important;
   color: var(--cl-text) !important;
   box-shadow: none !important;
-  border-radius: 14px !important;
+  border-radius: 18px !important;
+  padding: 10px 16px !important;
 }
 
 /* Assistant — flat, no background */
@@ -283,6 +295,19 @@ button[aria-haspopup][class*="text-sm"] {
 [data-message-author-role] td, [data-message-author-role] th,
 [data-message-author-role] strong, [data-message-author-role] em {
   color: var(--cl-text) !important;
+}
+
+/* Comfortable reply rhythm like Claude */
+[data-message-author-role="assistant"] p,
+[data-message-author-role="assistant"] li {
+  line-height: 1.7 !important;
+}
+[data-message-author-role="assistant"] h1,
+[data-message-author-role="assistant"] h2,
+[data-message-author-role="assistant"] h3 {
+  color: var(--cl-text) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.2px !important;
 }
 
 [data-message-author-role] a {
@@ -411,6 +436,10 @@ button[aria-label*="Send message"] {
   background-color: var(--cl-coral) !important;
   color: #FFFFFF !important; border: none !important;
   border-radius: 10px !important;
+  /* Pin the size so it can never paint as a full-width bar mid-layout */
+  width: 36px !important; height: 36px !important;
+  min-width: 36px !important; min-height: 36px !important;
+  flex: 0 0 auto !important; aspect-ratio: 1 / 1 !important;
 }
 button[data-testid="send-button"]:hover { background-color: var(--cl-coral-2) !important; }
 button[data-testid="send-button"] svg { color: #FFFFFF !important; }
@@ -427,17 +456,20 @@ form button:hover {
   background-color: var(--cl-surface-2) !important; color: #FFFFFF !important;
 }
 
-/* Suggestion / action boxes below the prompt — squarer, lightly rounded */
+/* Action chips below the prompt (Write / Learn / Code … in Claude) —
+   slightly-rounded rectangles, thin border, quiet surface, label in sand */
 [class*="suggestion"], main button[class*="rounded-full"] {
-  background-color: var(--cl-input) !important;
+  background-color: #262625 !important;
   border: 1px solid var(--cl-border) !important;
   color: var(--cl-text) !important;
   border-radius: 10px !important;
+  font-weight: 500 !important;
+  padding: 7px 12px !important;
 }
 [class*="suggestion"]:hover, main button[class*="rounded-full"]:hover {
-  background-color: var(--cl-surface-2) !important; color: var(--cl-text) !important;
+  background-color: var(--cl-surface) !important; color: var(--cl-text) !important;
 }
-/* Keep suggestion-box glyph icons visible (not forced white like composer) */
+/* Keep each chip's own glyph colour (e.g. the Gmail icon) — don't force white */
 [class*="suggestion"] svg, main button[class*="rounded-full"] svg {
   color: var(--cl-text) !important; fill: currentColor !important;
 }
@@ -509,6 +541,16 @@ button[class*="ghost"]:hover { background-color: var(--cl-surface) !important; }
 
 .bg-green-600, .bg-green-500, .bg-green-400 { background-color: var(--cl-coral) !important; }
 .text-green-600, .text-green-500 { color: var(--cl-coral) !important; }
+
+/* Don't tint loading/progress indicators coral — this is what removes the
+   thin orange bar that flashed in the prompt box during page load. */
+[role="progressbar"], [class*="progressbar"], [class*="progress-bar"],
+[class*="progress"], [class*="loading-bar"], [class*="nprogress"],
+#nprogress .bar, #nprogress .peg {
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
 
 [class*="border-token-border-light"] { border-color: var(--cl-border-soft) !important; }
 [class*="border-token-border-default"], [class*="border-token-border-medium"] {
