@@ -91,8 +91,7 @@ main, main > div, main > div > div,
 [role="main"], [role="presentation"],
 [class*="main-content"], [class*="conversation"],
 [class*="react-scroll-to-bottom"],
-[class*="thread"], [class*="thread-bottom"],
-[class*="composer-bg"], [class*="composer-container"] > div {
+[class*="thread"]:not([class*="composer"]) {
   background-color: var(--cl-bg-main) !important;
   color: var(--cl-text) !important;
 }
@@ -208,6 +207,20 @@ svg.claude-skin-brand,
 svg.claude-skin-brand path, .claude-skin-brand svg path {
   fill: var(--cl-coral) !important;
 }
+
+/* Sidebar rhythm — Claude spaces its icons/items with more air and
+   pushes the action group down below the brand/toggle row. */
+nav ul > li, nav [role="list"] > *,
+nav a[href], nav > div > a, nav > div > button[aria-label] {
+  margin-top: 4px !important;
+  margin-bottom: 4px !important;
+}
+/* Gap below the brand/toggle header so the icon group sits lower */
+nav [aria-label="New chat"], nav [data-testid="create-new-chat-button"] {
+  margin-top: 14px !important;
+}
+/* Brand logo enlarged to match the greeting mark */
+.claude-skin-brand { width: 30px !important; height: 30px !important; }
 
 nav::-webkit-scrollbar { width: 4px !important; }
 nav::-webkit-scrollbar-track { background: transparent !important; }
@@ -328,8 +341,14 @@ pre button:hover {
 }
 
 /* ── COMPOSE / INPUT ───────────────────────────────────────────── */
-form, [class*="composer"], [class*="prompt-wrapper"] {
+/* Every composer wrapper is transparent; only the JS-tagged box paints.
+   This is what kills the stray lighter-gray band in the middle of the
+   screen — previously full-width composer containers got #2C2C2A. */
+form, [class*="composer"], [class*="prompt-wrapper"],
+[class*="composer-bg"], [class*="composer-container"],
+.claude-skin-composer-bg {
   background-color: transparent !important;
+  background-image: none !important;
 }
 
 #prompt-textarea, [id="prompt-textarea"],
@@ -339,24 +358,31 @@ form, [class*="composer"], [class*="prompt-wrapper"] {
   caret-color: #FFFFFF !important;   /* white flashing caret */
 }
 
-/* The prompt box — taller, fully #2C2C2A */
-[class*="composer-parent"], form > div:first-child,
-[class*="composer-container"], [class*="composer-bg"] > div {
+/* The prompt box itself — fully #2C2C2A, taller, toolbar at the bottom.
+   .claude-skin-composer is tagged by content.js on the real box so the
+   colour never leaks onto a full-width wrapper. */
+.claude-skin-composer,
+[class*="composer-parent"], form > div:first-child {
   background-color: var(--cl-input) !important;
   border: 1px solid var(--cl-border) !important;
-  border-radius: 24px !important;
+  border-radius: 26px !important;
   box-shadow: 0 2px 12px rgba(0,0,0,0.25) !important;
 }
 
-/* Give the prompt box real vertical height */
-[class*="composer-parent"], [class*="composer-container"] {
-  min-height: 108px !important;
+/* Real vertical height + push the toolbar row to the bottom */
+.claude-skin-composer, [class*="composer-parent"] {
+  min-height: 116px !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
+.claude-skin-composer > :last-child { margin-top: auto !important; }
+
 #prompt-textarea, [id="prompt-textarea"] {
-  min-height: 56px !important;
-  padding-top: 6px !important;
+  min-height: 48px !important;
+  padding-top: 4px !important;
 }
 
+.claude-skin-composer:focus-within,
 [class*="composer-parent"]:focus-within,
 form > div:first-child:focus-within {
   border-color: var(--cl-surface-3) !important;

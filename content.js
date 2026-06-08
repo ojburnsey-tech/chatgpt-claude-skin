@@ -242,10 +242,38 @@
     });
   }
 
+  // ── 4e. Composer box tagging ─────────────────────────────────────
+  // Tag the real rounded input box so #2C2C2A only paints it (never a
+  // full-width wrapper), and strip backgrounds off sibling containers so
+  // no stray lighter-gray band appears in the middle of the screen.
+  function styleComposer() {
+    const ta = document.querySelector(
+      '#prompt-textarea, textarea[name="prompt-textarea"], [contenteditable="true"]'
+    );
+    if (!ta) return;
+    const form = ta.closest('form');
+    if (!form) return;
+
+    // The visual box = the direct child of <form> containing the textarea.
+    let box = ta;
+    while (box.parentElement && box.parentElement !== form) {
+      box = box.parentElement;
+    }
+    if (box !== ta && !box.classList.contains('claude-skin-composer')) {
+      box.classList.add('claude-skin-composer');
+    }
+
+    // Neutralise any other full-width children of the form (stray bands).
+    Array.from(form.children).forEach((ch) => {
+      if (ch !== box) ch.classList.add('claude-skin-composer-bg');
+    });
+  }
+
   function applyDynamicArt() {
     addGreetingLogo();
     recolorBrandLogo();
     swapSidebarIcons();
+    styleComposer();
   }
 
   // ── 5. Page title patch ──────────────────────────────────────────
