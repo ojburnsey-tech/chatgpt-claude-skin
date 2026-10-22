@@ -23,7 +23,7 @@ Recreates Claude's warm **dark** theme on top of ChatGPT.
 | Favicon    | OpenAI logo              | Claude coral ring mark     |
 | Tab title  | "ChatGPT"                | "Claude"                   |
 
-## File structure
+## File structures
 
 ```
 claude-skin-for-chatgpt/
